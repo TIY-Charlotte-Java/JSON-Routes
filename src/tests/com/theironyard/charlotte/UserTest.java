@@ -31,10 +31,12 @@ public class UserTest {
     }
 
     @Test
-    public void deleteUser() throws Exception {
+    public void selectUsers() throws Exception {
         Connection conn = startConnection();
         User.insertUser(conn, "mike", "street", "yamama@yamama.com");
-        User user = User.selectUser(conn, "mike");
+        ArrayList<User> users = User.selectUsers(conn);
+        conn.close();
+        assertTrue(users.size() == 1);
     }
 
     @Test
@@ -44,7 +46,17 @@ public class UserTest {
         User.updateUser(conn, "butts", "fake", "fake@fake.com", 1);
         User user = User.selectUser(conn, "butts");
         conn.close();
-        assertEquals(user.name, "butts");
+        assertEquals(user.username, "butts");
+    }
+
+    @Test
+    public void deleteUser() throws Exception {
+        Connection conn = startConnection();
+        User.insertUser(conn, "mike", "street", "yamama@yamama.com");
+        User.deleteUser(conn, 1);
+        ArrayList<User> users = User.selectUsers(conn);
+        conn.close();
+        assertTrue(users.size() == 0);
     }
 
 }

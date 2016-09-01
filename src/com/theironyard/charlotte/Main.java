@@ -15,12 +15,14 @@ public class Main {
 
     public static void createTables(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
-        stmt.execute("CREATE TABLE IF NOT EXISTS users (id IDENTITY, name VARCHAR, address VARCHAR, email VARCHAR)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS users (id IDENTITY, username VARCHAR, address VARCHAR, email VARCHAR)");
     }
 
     public static void main(String[] args) throws SQLException {
         Server.createWebServer().start();
+
         Connection conn = DriverManager.getConnection("jdbc:h2:./main");
+
         createTables(conn);
 
         Spark.externalStaticFileLocation("public");
@@ -31,6 +33,7 @@ public class Main {
                 "/user",
                 ((request, response) -> {
                     ArrayList<User> users = User.selectUsers(conn);
+
                     JsonSerializer s = new JsonSerializer();
                     return s.serialize(users);
                 })
@@ -40,9 +43,11 @@ public class Main {
                 "/user",
                 ((request, response) -> {
                     String body = request.body();
+
                     JsonParser p = new JsonParser();
                     User user = p.parse(body, User.class);
-                    User.insertUser(conn, user.name, user.address, user.email);
+
+                    User.insertUser(conn, user.username, user.address, user.email);
                     return "";
                 })
         );
@@ -51,9 +56,11 @@ public class Main {
                 "/user",
                 ((request, response) -> {
                     String body = request.body();
+
                     JsonParser p = new JsonParser();
                     User user = p.parse(body, User.class);
-                    User.updateUser(conn, user.name, user.address, user.email, user.id);
+
+                    User.updateUser(conn, user.username, user.address, user.email, user.id);
                     return "";
                 })
         );
@@ -62,11 +69,12 @@ public class Main {
                 "/user/:id",
                 ((request, response) -> {
                     String idValue = request.params("id");
+
                     int indexNumber = Integer.valueOf(idValue);
+
                     User.deleteUser(conn, indexNumber);
                     return "";
                 })
         );
     }
-
 }

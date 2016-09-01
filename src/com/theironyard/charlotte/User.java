@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class User {
     Integer id;
-    String name;
+    String username;
     String address;
     String email;
 
@@ -19,9 +19,9 @@ public class User {
 
     }
 
-    public User(Integer id, String name, String address, String email) {
+    public User(Integer id, String username, String address, String email) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.address = address;
         this.email = email;
     }
@@ -34,12 +34,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAddress() {
@@ -59,14 +59,14 @@ public class User {
     }
 
     public static User selectUser(Connection conn, String name) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE name = ?");
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE username = ?");
         stmt.setString(1, name);
 
         ResultSet results = stmt.executeQuery();
 
         if (results.next()) {
             Integer id = results.getInt("id");
-            String username = results.getString("name");
+            String username = results.getString("username");
             String address = results.getString("address");
             String email = results.getString("email");
 
@@ -84,19 +84,19 @@ public class User {
 
         while (results.next()) {
             Integer id = results.getInt("id");
-            String name = results.getString("name");
+            String username = results.getString("username");
             String address = results.getString("address");
             String email = results.getString("email");
 
-            userList.add(new User(id, name, address, email));
+            userList.add(new User(id, username, address, email));
         }
         return userList;
     }
 
-    public static void insertUser(Connection conn, String name, String address, String email) throws SQLException {
+    public static void insertUser(Connection conn, String username, String address, String email) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO users VALUES (NULL, ?, ?, ?)");
 
-        stmt.setString(1, name);
+        stmt.setString(1, username);
         stmt.setString(2, address);
         stmt.setString(3, email);
 
@@ -111,13 +111,13 @@ public class User {
         stmt.execute();
     }
 
-    public static void updateUser(Connection conn, String name, String address, String email, Integer id)
+    public static void updateUser(Connection conn, String username, String address, String email, Integer id)
             throws SQLException {
 
-        PreparedStatement stmt = conn.prepareStatement("UPDATE users SET name = ?, address = ?, email = ?" +
+        PreparedStatement stmt = conn.prepareStatement("UPDATE users SET username = ?, address = ?, email = ?" +
                 "WHERE id = ?");
 
-        stmt.setString(1, name);
+        stmt.setString(1, username);
         stmt.setString(2, address);
         stmt.setString(3, email);
         stmt.setInt(4, id);
