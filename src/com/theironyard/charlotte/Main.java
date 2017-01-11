@@ -48,7 +48,8 @@ public class Main {
                     String body = req.body();
                     JsonParser p = new JsonParser();
                     User user = p.parse(body, User.class);
-                    updateUser(conn, user.id, user.username, user.address, user.email);
+//                    updateUser(conn, user.id, user.username, user.address, user.email);
+                    updateUser(conn, user);
                     return "";
                 })
         );
@@ -86,15 +87,21 @@ public class Main {
         }
         return users;
     }
-    public static User updateUser (Connection conn, int id, String username, String address, String email) throws SQLException {
-        User current = getUserById(conn, id);
+    public static void updateUser (Connection conn, User user) throws SQLException {
+
+//        int id, String username, String address, String email (this was the modifiers for the method)
+//        User current = getUserById(conn, id);
         PreparedStatement stmt = conn.prepareStatement("UPDATE users SET username=?, address=?, email=? WHERE id=?");
-        stmt.setInt(4, id);
-        stmt.setString(1, username);
-        stmt.setString(2, address);
-        stmt.setString(3, email);
-        stmt.execute();
-        return current;
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, user.getAddress());
+        stmt.setString(3, user.getEmail());
+        stmt.setInt(4, user.getId());
+//        stmt.setInt(4, id);
+//        stmt.setString(1, username);
+//        stmt.setString(2, address);
+//        stmt.setString(3, email);
+//        stmt.execute();
+//        return current;
     }
 
     public static User getUserById(Connection conn, int id) throws SQLException {
