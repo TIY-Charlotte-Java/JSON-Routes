@@ -15,24 +15,24 @@ public class User {
     public User() {
     }
 
-    public User(String username, String address, String email) {
-        this.username = username;
-        this.address = address;
-        this.email = email;
-    }
-
-    public User(int id, String username, String address, String email) {
+    public User(Integer id, String username, String address, String email) {
         this.id = id;
         this.username = username;
         this.address = address;
         this.email = email;
     }
 
-    public int getId() {
+    public User(String username, String address, String email) {
+        this.username = username;
+        this.address = address;
+        this.email = email;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -68,21 +68,21 @@ public class User {
     }
 
     public static ArrayList<User> selectUser(Connection conn) throws SQLException{
-        ArrayList<User> item = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>();
         Statement stmt = conn.createStatement();
         ResultSet results = stmt.executeQuery("Select * from users");
         while (results.next()){
-            int id = results.getInt("id");
+            Integer id = results.getInt("id");
             String username = results.getString("username");
             String address = results.getString("address");
             String email = results.getString("email");
-            item.add(new User(id,username,address,email));
+            users.add(new User(id,username,address,email));
         }
-        return item;
+        return users;
     }
 
     public static void updateUser(Connection conn, User user) throws SQLException{
-        PreparedStatement stmt = conn.prepareStatement("update users set username = ?, address = ?, email = ?");
+        PreparedStatement stmt = conn.prepareStatement("update users set username = ?, address = ?, email = ? where id = ?");
 
         stmt.setString(1,user.getUsername());
         stmt.setString(2,user.getAddress());
@@ -99,6 +99,6 @@ public class User {
 
     public static void creatTable(Connection conn) throws SQLException{
         Statement stmt = conn.createStatement();
-        stmt.execute("CREATE TABLE IF NOT EXISTS users(id IDENTITY, username VARCHAR, address VARCHAR, email VARCHAR)" );
+        stmt.execute("CREATE TABLE IF NOT EXISTS users(id IDENTITY, username VARCHAR, address VARCHAR, email VARCHAR)");
     }
 }

@@ -12,18 +12,21 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) throws SQLException {
 	// write your code here
-
-        Spark.externalStaticFileLocation("public");
         Server.createWebServer().start();
         Connection conn = DriverManager.getConnection("jdbc:h2:./main");
         User.creatTable(conn);
 
-        Spark.get("/user", (request, response) -> {
-            ArrayList<User>user = User.selectUser(conn);
-            JsonSerializer s = new JsonSerializer();
-            return s.serialize(user);
+        Spark.externalStaticFileLocation("public");
+        Spark.init();
 
-        });
+        Spark.get(
+                "/user",
+                ((request, response) -> {
+                    ArrayList<User>user = User.selectUser(conn);
+                    JsonSerializer s = new JsonSerializer();
+                    return s.serialize(user);
+                })
+        );
         Spark.post(
                 "/user",
                 ((request, response) -> {
@@ -34,5 +37,24 @@ public class Main {
                     return "";
                 })
         );
+
+        Spark.put("/user", (
+                (request, response) -> {
+                    String body = request.body();
+                    JsonParser p = new JsonParser();
+                    User user = p.parse(body,User.class);
+                    User.updateUser(conn, user);
+                    return"";
+                })
+        );
+
+        Spark.delete("/user/:id",
+                ((request, response) -> {
+                    Integer id = Integer.valueOf(request.params("id"));
+                    User.deleteUser(conn,id);
+
+            return "";
+
+                }));
     }
 }
