@@ -59,6 +59,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
     public static void insertUser(Connection conn, String username, String address, String email) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement ("insert into users values (NULL, ?, ?, ?)");
         stmt.setString(1,username);
@@ -82,15 +84,14 @@ public class User {
     }
 
     public static void updateUser(Connection conn, User user) throws SQLException{
-        PreparedStatement stmt = conn.prepareStatement("update users set username = ?, address = ?, email = ? where id = ?");
-
+        PreparedStatement stmt = conn.prepareStatement("update users set username = ?, address = ?, email = ? where id =?");
         stmt.setString(1,user.getUsername());
         stmt.setString(2,user.getAddress());
         stmt.setString(3,user.getEmail());
         stmt.setInt(4,user.getId());
         stmt.execute();
     }
-
+//pass in the conn and an object and deletes the user based on the id
     public static void deleteUser(Connection conn, int id ) throws SQLException{
         PreparedStatement stmt = conn.prepareStatement("delete from users where id = ?");
         stmt.setInt(1,id);

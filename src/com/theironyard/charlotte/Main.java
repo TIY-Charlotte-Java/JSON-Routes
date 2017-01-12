@@ -20,6 +20,9 @@ public class Main {
         Spark.init();
 
         Spark.get(
+                //goes to the selectUser method and takes the info and serializes the object and return it to the page
+                // because its a get you have a return
+                //getting something back
                 "/user",
                 ((request, response) -> {
                     ArrayList<User>user = User.selectUser(conn);
@@ -28,6 +31,8 @@ public class Main {
                 })
         );
         Spark.post(
+         //you are sending info back
+        //jsonParser, takes the info that is entered by the user and inserts it into the table
                 "/user",
                 ((request, response) -> {
                     String body = request.body();
@@ -37,17 +42,20 @@ public class Main {
                     return "";
                 })
         );
-
+         //put is another way to say post to the form, therefore nothing is returned
+         //updating the user info
         Spark.put("/user", (
                 (request, response) -> {
                     String body = request.body();
                     JsonParser p = new JsonParser();
-                    User user = p.parse(body,User.class);
+                    User user = p.parse(body, User.class);
                     User.updateUser(conn, user);
+                    //here we are putting the object user in
                     return"";
                 })
         );
-
+         //deleting the user
+        //id is used to delete the user
         Spark.delete("/user/:id",
                 ((request, response) -> {
                     Integer id = Integer.valueOf(request.params("id"));
@@ -55,6 +63,7 @@ public class Main {
 
             return "";
 
-                }));
+                })
+        );
     }
 }
