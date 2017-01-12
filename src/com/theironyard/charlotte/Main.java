@@ -52,8 +52,14 @@ public class Main {
                     return "";
                 })
         );
-
-
-//    Create a DELETE route called /user/:id that gets the id via request.params(":id") and gives it to deleteUser to delete it in the database.
+        //    Create a DELETE route called /user/:id that gets the id via request.params(":id") and gives it to deleteUser to delete it in the database.
+        Spark.delete(
+                "/user/:id",
+                ((request, response) -> {
+                    int id = Integer.valueOf(request.params("id"));
+                    User.deleteUser(conn, id);
+                    return "";
+                })
+        );
     }
 }
