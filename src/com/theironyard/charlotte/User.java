@@ -1,17 +1,17 @@
 package com.theironyard.charlotte;
 
 public class User {
-    Integer id = null;
-    String userName;
+    Integer id;
+    String username;
     String address;
     String email;
 
     public User() {
     }
 
-    public User(Integer id, String userName, String address, String email) {
+    public User(Integer id, String username, String address, String email) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.address = address;
         this.email = email;
     }
@@ -24,12 +24,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAddress() {
